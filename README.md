@@ -29,7 +29,7 @@ This repository contains the **official landing page for Data AI**, an AI-powere
 ### **🛠 Setup & Installation:**  
 
 ```bash
-git clone https://github.com/your-username/DatAI.git  
+git clone https://github.com/KLLC7/DatAI.git  
 cd DatAI
 npm install  
 npm run dev  
