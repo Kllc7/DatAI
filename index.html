@@ -1,0 +1,1725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DATAI</title>
+<script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.53/build/spline-viewer.js"></script>
+<style>
+    
+    
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body {
+    background: #ffffff;
+    color: #000000;
+    font-family: 'Inter', sans-serif;
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+}
+.scene-container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+spline-viewer {
+    width: 100%;
+    height: 100%;
+}
+.text-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+/* Primary Navigation */
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #000;
+    text-decoration: none;
+}
+.logo svg {
+    width: 100px;
+    height: 50px;
+    margin-right: 10px;
+    margin: auto;
+    z-index: 1001;
+}
+
+#text1 {
+    position: absolute;
+    max-width: 700px ;
+    top: 100px;
+    left: 40px;
+    font-size: clamp(1.8rem, 6vw, 3.5rem);
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(48, 53, 0, 0.2);
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: all 0.5s ease;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px 30px;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    pointer-events: auto;
+}
+#sub {
+    font-size: clamp(1rem, 2vw, 1rem);
+    font-weight: 15;
+    padding: 15px 0px;
+    text-shadow: 0 2px 4px rgba(48, 53, 0, 0.1);
+    opacity: 0.5;
+}
+#sub2 {
+    font-size: clamp(1rem, 4vw, 1rem);
+    font-weight: 8;
+    padding: 5px 0px;
+    text-shadow: 0 2px 4px rgba(48, 53, 0, 0.1);
+    opacity: 0.5;
+}
+#text1.text-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.side-content {
+    position: absolute;
+    top: 80px;
+    right: 10px;
+    max-width: 700px;
+    width: 90%;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto;
+    pointer-events: none;
+    padding-right: 20px;
+}
+.content-block {
+    margin-bottom: 30px;
+    padding: 1.5rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+}
+.content-block.content-visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+.feature-list {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.6s ease;
+    margin-top: 10px;
+}
+.content-block:hover .feature-list {
+    max-height: 500px;
+}
+.feature-item {
+    margin: 10px 0;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+}
+.animated-text {
+    font-size: clamp(1.5rem, 4vw, 2.5rem);
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+.content-paragraph {
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    line-height: 1.6;
+    margin-bottom: 20px;
+    color: rgba(0, 0, 0, 0.9);
+}
+.action-button, .nav-action-button {
+    display: inline-block;
+    padding: 1rem 2rem;
+    background: rgba(0, 123, 255, 0.9);
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    backdrop-filter: blur(10px);
+}
+.nav-action-button {
+    padding: 0.75rem 1.5rem;
+}
+.action-button:hover, .nav-action-button:hover {
+    background: rgba(0, 123, 255, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+}
+.scroll-instructions {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(0.875rem, 2vw, 1rem);
+    opacity: 0.7;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 20px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+.scroll-instructions.fade-out {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+}
+.primary-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    z-index: 1000;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+.primary-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    justify-content: space-between;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.logo {
+    flex: 0 0 auto;
+}
+.logo svg {
+    width: 100px;
+    height: 50px;
+}
+.nav-items {
+    display: flex;
+    gap: 2rem;
+    margin: 0 2rem;
+    flex: 1;
+    justify-content: center;
+}
+.nav-item {
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+.nav-item:hover {
+    color: #007bff;
+}
+.nav-action-button {
+    flex: 0 0 auto;
+}
+.section {
+    min-height: 100vh;
+    padding: 80px 2rem;
+    position: relative;
+}
+.section-header {
+    position: sticky;
+    top: 80px;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0);
+    z-index: 10;
+    transition: opacity 0.3s ease;
+}
+.section-content {
+    max-width: 800px;
+    margin: 0 0;
+}
+.section-header.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.scroll-bar {
+    position: fixed;
+    right: 100px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 60vh;
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 3px;
+    
+}
+.scroll-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background-color: #007bff;
+    border-radius: 3px;
+    transition: height 0.3s ease;
+}
+.checkpoint {
+    position: absolute;
+    right: 0px;
+    width: 13px;
+    height: 13px;
+    background-color: #ffffff;
+    border: 2px solid #007bff;
+    border-radius: 50%;
+    transform: translateX(50%);
+    transition: background-color 0.3s ease;
+}
+.checkpoint.active {
+    background-color: #007bff;
+}
+.secondary-nav {
+    display: flex;
+    gap: 1rem;
+}
+.menu-item {
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+}
+.nav-action-button {
+    padding: 0.5rem 1rem;
+    background: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+}
+@media screen and (max-width: 768px) {
+    .side-content {
+        right: 10px;
+        width: calc(100% - 20px);
+        padding-right: 10px;
+    }
+    #text1 {
+        left: 20px;
+        top: 100px;
+    }
+    .primary-nav {
+        padding: 1rem;
+    }
+    .secondary-nav {
+        padding: 0.5rem;
+        gap: 1rem;
+    }
+}
+@media screen and (max-width: 480px) {
+    #text1 {
+        left: 10px;
+        top: 90px;
+        padding: 15px 20px;
+    }
+    .content-block {
+        padding: 1rem;
+    }
+    .menu-item {
+        padding: 0.5rem;
+        font-size: 0.9rem;
+    }
+}
+.mission-section {
+  
+    background:#ffffff;
+    padding: 0;
+}
+.mission-header {
+    text-align: left;
+    max-width: 100%;
+}
+.mission-header h2 {
+    font-size: 2rem;
+    left: auto;
+    font-weight: lighter;
+    color: #1a1a1a;
+    margin-bottom: 2rem;
+}
+.mission-header p {
+    font-size: 2.5rem;
+    font-weight: Bold;
+    color: #000000;
+    text-align: center;
+    max-width: 100%;
+    margin: 50px;
+}
+.core-values {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto 2rem;
+}
+.value-card {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+.value-card:hover {
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.card-header .icon {
+    margin-right: 0.75rem;
+    color: #2564ebc9;
+}
+.card-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+.value-card p {
+    color: #666;
+    line-height: 1.6;
+}
+.vision-statement {
+    background: #2563eb;
+    color: white;
+    border-radius: 1rem;
+    padding: 3rem;
+    text-align: center;
+    max-width: 1200px;
+    margin: 0 auto 5rem;
+}
+.vision-icon {
+    margin: 0 auto 1.5rem;
+}
+.vision-statement h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+.vision-statement p {
+    font-size: 1.125rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+.learn-more {
+    display: inline-flex;
+    align-items: center;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+}
+.learn-more:hover {
+    opacity: 0.9;
+}
+.arrow-icon {
+    margin-left: 0.5rem;
+}
+.impact-metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    text-align: center;
+}
+.metric-value {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #2563eb;
+    margin-bottom: 0.5rem;
+}
+.metric-label {
+    color: #666;
+}
+
+
+/* Base styles */
+html, body {
+  overflow-y: auto;
+  height: auto;
+  min-height: 100%;
+}
+
+/* Layout */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Scene Container */
+.scene-container {
+  overflow-y: visible;
+}
+
+.scroll-content {
+  min-height: 200vh;
+  padding-top: 100vh;
+  overflow-y: visible;
+}
+
+/* Side Content Blocks */
+.side-content {
+  position: fixed;
+  pointer-events: none;
+}
+
+.content-block {
+  position: fixed;
+  width: 450px;
+  opacity: 0;
+  transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: auto;
+}
+
+#block1 {
+  top: 100px;
+  left: 40px;
+  transform: translateX(30px);
+}
+
+#block2 {
+  top: 100px;
+  right: 40px;
+  transform: translateX(30px);
+}
+
+#block3 {
+  top: 100px;
+  left: 60px;
+  transform: translateX(30px);
+}
+
+#block4 {
+  bottom: 100px;
+  left: 40px;
+  transform: translateX(-30px);
+}
+
+
+/* Sections */
+.section {
+  background: white;
+  padding: 4rem 2rem;
+  min-height: 100vh;
+}
+
+#mission.section {
+  height: fit-content;
+}
+
+.section-content {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.section-header {
+  font-size: 2rem;
+  font-weight: lighter;
+  color: #1a1a1a;
+  text-align: center;
+  margin: 4rem 0 2rem;
+  padding: 1rem;
+  border-radius: 10px;
+  width: fit-content;
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+}
+
+.section-header.transparent {
+  background: transparent;
+  backdrop-filter: none;
+  padding: 1rem 0;
+}
+
+/* Features Section */
+.features-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.features-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.features-header h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.features-header p {
+  font-size: 1.2rem;
+  color: #666;
+}
+
+/* Product Slider */
+.product-slider-container {
+  position: relative;
+  max-width: 1000px;
+  margin: 20px auto 0;
+  padding: 0 50px;
+  overflow: hidden;
+}
+
+.product-slider {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.3s ease-in-out;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 20px 0;
+}
+
+.product-slider::-webkit-scrollbar {
+  display: none;
+}
+
+.product-slide {
+  min-width: 300px;
+  height: 400px;
+  background-color: #e5e7eb;
+  border-radius: 0.5rem;
+  scroll-snap-align: center;
+  flex-shrink: 0;
+}
+
+.slider-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.prev-slide {
+  left: 0;
+}
+
+.next-slide {
+  right: 0;
+}
+
+/* Feature Cards */
+.feature-card {
+  padding: 2rem;
+  background: #f8f9fa;
+  border-radius: 12px;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.feature-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 1rem;
+  color: #1a1a1a;
+}
+
+.feature-card p {
+  color: #666;
+  line-height: 1.6;
+}
+
+/* Icons */
+.feature-icon {
+  color: #007bff;
+  margin-bottom: 1rem;
+}
+
+.vision-icon {
+  color: #ffffff;
+  margin-bottom: 1.5rem;
+}
+
+.arrow-icon {
+  color: #ffffff;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Contact Section */
+#contact {
+  background-color: #111827;
+  color: white;
+}
+
+.donation-container {
+  max-width: 600px;
+  margin: 0 auto;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 2rem;
+}
+
+/* Buttons and Controls */
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #0056b3;
+}
+
+
+.scroll-content {
+    min-height: 200vh;
+    padding-top: 100vh;
+}
+body, html {
+    overflow-y: auto;
+    height: auto;
+    min-height: 100%;
+}
+.scene-container {
+    overflow-y: visible;
+}
+.scroll-content {
+    overflow-y: visible;
+}
+.side-content {
+    position: fixed;
+    pointer-events: none;
+}
+.scroll-content {
+    min-height: 200vh; 
+    padding-top: 100vh;
+}
+#block1 {
+    position: fixed;
+    top: 100px;
+    left: 40px;
+    width: 450px;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+}
+#block2{
+    position: fixed;
+    top: 100px;
+    right: 40px;
+    width: 450px;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+}
+#block3{
+    position: fixed;
+    top: 100px;
+    left: 60px;
+    width: 450px;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+}
+ #block4 {
+    position: fixed;
+    bottom: 100px;
+    left: 40px;
+    width: 450px;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+}
+.floating-menu {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 2rem;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+.floating-menu.visible {
+    opacity: 1;
+    visibility: visible;
+}
+.floating-menu-item {
+    text-decoration: none;
+    color: #000;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    transition: all 0.3s ease;
+}
+.floating-menu-item:hover,
+.floating-menu-item.active {
+    background: #007bff;
+    color: white;
+}
+.page-sections {
+    position: relative;
+   
+    background: white;
+    z-index: 2;
+}
+.section {
+
+    background: rgb(255, 255, 255);
+}
+.section-content {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+}
+.section {
+  padding: 4rem 2rem;
+}
+
+.section-header {
+    font-size: 2rem;
+    left: auto;
+    font-weight: lighter;
+    color: #1a1a1a;
+    margin-bottom: 2rem;
+  text-align: center;
+ 
+  
+  margin-top: 4rem;
+  background-color: #00000000;
+ 
+  backdrop-filter: blur(10px);
+  display: block;
+  
+  border-radius:10px;
+  width: fit-content;
+
+
+}
+
+
+
+.tab-button {
+  padding: 1rem 2rem;
+  border: none;
+  background: transparent;
+  font-size: 1.1rem;
+  color: #666;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.tab-button.active {
+  color: #000;
+  border-bottom: 2px solid #000;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+
+#section-header{
+background-color: #66666600;
+        }
+
+.arrow-icon {
+  color: #ffffff;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+.section-header.transparent {
+      background: transparent;
+      backdrop-filter: none;
+      color: #1a1a1a;
+      padding: 1rem 0;
+      margin-bottom: 2rem;
+    }
+
+    .prototype-section {
+      padding: 4rem 0;
+      background: #ffffff;
+    }
+
+    .prototype-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .prototype-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .prototype-header h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #1a1a1a;
+    }
+
+    .prototype-header p {
+      font-size: 1.2rem;
+      color: #666;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .prototype-frame {
+      position: relative;
+      width: 100%;
+      height: 600px;
+      margin: 2rem 0;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .prototype-frame iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .prototype-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 4rem;
+    }
+
+   
+    @media (max-width: 768px) {
+      .prototype-frame {
+        height: 400px;
+      }
+
+      .prototype-header h2 {
+        font-size: 2rem;
+      }
+
+      .prototype-container {
+        padding: 0 1rem;
+      }
+    }
+    /* Basic Styling */
+.section {
+  background-color: #ffffff;
+}
+
+.features-header h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+}
+#mission.section{
+    height: fit-content;
+}
+.product-slider-container {
+  max-width: 100%;
+  overflow: hidden; /* Hide overflow to prevent content spilling out */
+  margin-top: 20px;
+}
+
+.product-slider {
+  display: flex;
+  gap: 20px; /* Space between each slide */
+  transition: transform 0.3s ease-in-out;
+}
+
+.product-slide {
+  width: 320px;
+  height: 450px;
+  background-color: #e0e0e0; /* Light gray background for placeholder */
+  border-radius: 10px;
+  position: relative;
+}
+
+.placeholder-image {
+  width: 320px;
+  height: 450px;
+  background-color: #ccc; /* Placeholder gray color */
+  background-image: linear-gradient(45deg, #ddd, #ccc); /* Add subtle gradient effect */
+  background-size: 400% 400%; /* Make the gradient move to give it a "shimmer" effect */
+  animation: shimmer 1.5s infinite linear; /* Simple shimmer effect */
+}
+
+/* Optional shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.section-cta {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.cta-button {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+}
+
+.arrow-icon {
+  margin-left: 10px;
+}
+
+/* For responsiveness */
+@media (max-width: 768px) {
+  .product-slide {
+    width: 320px; /* Adjust slide width on smaller screens */
+    height: 400px; /* Adjust height on smaller screens */
+  }
+}
+.section-content #contact{
+        
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    width: fit-content;
+}
+.container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Mission Section */
+    #mission {
+      background-color: white;
+      display: flex;
+      align-items: center;
+    }
+
+    .mission-content {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .mission-content h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .mission-content p {
+      font-size: 1.25rem;
+      color: #4a5568;
+      margin-bottom: 2.5rem;
+    }
+
+    .cta-button {
+      display: inline-flex;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #3b82f6;
+      color: white;
+      text-decoration: none;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .cta-button:hover {
+      background-color: #2563eb;
+    }
+
+    /* Product Section */
+    #features {
+      background-color: #f9fafb;
+    }
+
+    .product-slider-container {
+      position: relative;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 50px;
+    }
+
+    .product-slider {
+      display: flex;
+      gap: 1.5rem;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      padding: 20px 0;
+    }
+
+    .product-slider::-webkit-scrollbar {
+      display: none;
+    }
+
+    .product-slide {
+      min-width: 300px;
+      height: 400px;
+      background-color: #e5e7eb;
+      border-radius: 0.5rem;
+      scroll-snap-align: center;
+      flex-shrink: 0;
+    }
+
+    .slider-button {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: white;
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .prev-slide {
+      left: 0;
+    }
+
+    .next-slide {
+      right: 0;
+    }
+
+    /* Contact Section */
+    #contact {
+      background-color: #111827;
+      color: white;
+    }
+
+    .donation-container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .tab-buttons {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .tab-button {
+      flex: 1;
+      padding: 0.75rem;
+      border: none;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    .tab-button.active {
+      background-color: #3b82f6;
+      color: white;
+    }
+
+    .amounts-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .amount-button {
+      padding: 0.75rem;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0.5rem;
+      background: none;
+      color: white;
+      cursor: pointer;
+    }
+
+    .amount-button:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .donate-button {
+      width: 100%;
+      padding: 1rem;
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-bottom: 1rem;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+</style>
+
+</head>
+<body>
+<div class="scroll-bar">
+<div class="scroll-progress"></div>
+<div class="checkpoint" style="top: 0%"></div>
+<div class="checkpoint" style="top: 25%"></div>
+<div class="checkpoint" style="top: 50%"></div>
+<div class="checkpoint" style="top: 75%"></div>
+<div class="checkpoint" style="top: 100%"></div>
+</div>
+<nav class="primary-nav">
+<a href="#" class="logo">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 2048 543" width="1200" height="350" xmlns="http://www.w3.org/2000/svg">
+<path transform="translate(24,47)" d="m0 0h218l27 3 25 6 20 6 16 7 15 8 16 11 10 8 15 14 9 11 11 15 14 27 6 17 8 32 3 24 1 33-1 26-3 26-8 35-7 19-10 21-12 17-9 10-13 13-17 12-16 8-20 8-18 5-21 4-25 3-36 2h-198l-1-1v-6l1-1 16-2 10-4 5-4 6-10 3-12v-352l-3-11-6-10-5-4-9-4-17-3zm165 7-13 2-8 4-5 6-4 13-1 263v82l1 18 3 12 5 8 6 4 10 3 12 1h18l16-2 17-5 21-11 13-11 10-10 10-14 11-20 8-22 7-26 4-26 2-19 1-17v-50l-2-30-4-29-6-24-8-24-13-25-13-16-14-13-21-12-18-6-17-3-12-1z" fill="#007bff"/>
+<path transform="translate(941,47)" d="m0 0h385l3 31 7 96v10h-12l-4-17-5-12-10-18-10-14-9-11-12-13-12-11-13-10-18-11-13-6-13-4-13-2h-11v373l1 13 3 10 4 6 9 8 10 3 17 2v7l-1 1h-182v-8l17-2 12-4 7-6 5-8 3-13 1-383-27 2-17 5-15 8-12 8-14 12-13 13-11 14-8 11-7 11-10 18-7 19-3 9h-12v-12l9-122z" fill="#007bff"/>
+<path transform="translate(709,47)" d="m0 0 3 1 9 24 8 20 33 84 9 23 15 38 13 33 19 48 16 41 11 28 8 20 8 21 9 20 10 14 6 5 8 4 1 1v5l-1 1h-156l-1-7 7-2 10-5 5-8 2-6v-17l-6-20-15-38-11-28-7-18-138-1-3 10-14 37-2 9v24l4 14 8 15 9 11 9 8 15 9 12 4 7 1 1 1v6l-1 1h-155l-1-1v-6l16-4 9-5 10-8 7-6 11-14 10-15 10-18 16-39 11-28 10-26 10-25 11-28 12-30 8-21 17-45 6-18-1-8-5-12-9-14-11-11-6-4v-2l19-3 16-5 24-11 15-9 13-9zm-56 105-4 8-11 29-8 20-12 31-12 30-8 21-10 25v4h129l1-4-9-24-15-38-12-31-8-20-11-28-9-23z" fill="#007bff"/>
+<path transform="translate(1608,47)" d="m0 0h2l14 35 33 84 15 38 26 66 14 36 21 53 12 31 15 38 7 16 9 15 7 7 11 5v6l-1 1h-156l-1-1v-7l10-2 7-4 6-10 1-4v-17l-3-12-15-38-18-46-3-8-137-1-11 28-8 24-2 11v11l4 17 8 17 12 14 13 10 14 7 14 3v8h-155l-1-7 18-5 11-7 12-10 9-11 7-10 11-18 11-23 10-26 10-25 11-28 14-35 22-56 9-24 13-34 6-18v-6l-8-18-10-13-9-9-6-4v-1l24-4 19-7 19-9 22-14zm-56 105-13 31-12 31-22 56-10 26-9 22v2h127l5-1-3-9-13-33-12-31-10-25-27-69z" fill="#007bff"/>
+<path transform="translate(1829,47)" d="m0 0h176v7l-19 3-8 3-5 4-6 12-2 10v351l2 11 5 10 8 7 8 3 17 2 1 4-1 4h-175l-1-1v-7l17-2 9-3 7-6 5-9 2-7 1-11v-336l-1-15-4-11-5-7-8-5-16-3-7-1z" fill="#007bff"/>
+<defs>
+<linearGradient id="paint0_linear" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+<stop stop-color="#007BFF"/>
+<stop offset="1" stop-color="#00BFFF"/>
+</linearGradient>
+<linearGradient id="paint1_linear" x1="8" y1="8" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+<stop stop-color="#007BFF"/>
+<stop offset="1" stop-color="#00BFFF"/>
+</linearGradient>
+</defs>
+</svg>
+</a>
+<div class="nav-items">
+<a href="#mission" class="nav-item">Our Mission</a>
+<a href="#features" class="nav-item">Products</a>
+<a href="#about" class="nav-item">Prototype</a>
+<a href="#contact" class="nav-item">Contact</a>
+</div>
+<a href="#contact" class="nav-action-button">Join The Waitlist</a>
+</nav>
+<div class="scene-container">
+<spline-viewer url="https://prod.spline.design/05X7vr-A3GYevwIX/scene.splinecode"></spline-viewer>
+<div class="text-container">
+<div class="animated-text" id="text1">Marketing Made Easy.
+<p id="sub">Every great idea starts with a stroke of genius.
+DATAI turns your vision into campaigns faster than ever — without the guesswork.</p>
+</div>
+<div class="side-content">
+<div class="content-block" id="block1">
+<div class="animated-text">See What Others Miss.</div>
+<p class="content-paragraph">DATAI analyzes your data to uncover what matters most. Find out what content resonates with your audience, identify engagement trends, and adapt in real time to stay ahead.</p>
+<div class="feature-list">
+<div class="feature-item">Know Before You Act: Analyze past performance trends to predict campaign success rates with precision.</div>
+<div class="feature-item">Find Your True Audience: Discover your ideal customers and how to reach them.</div>
+<div class="feature-item">Grow Faster: Cut your time to launch with instant data insights.</div>
+</div>
+</div>
+<div class="content-block" id="block2">
+<div class="animated-text">Create Articles, Posts, and Videos Effortlessly.</div>
+<p class="content-paragraph">DATAI transforms your ideas into impactful blog posts, social media content, and videos. We streamline your entire content creation process.</p>
+<div class="feature-list">
+<div class="feature-item">Text to Video: Convert your ideas into polished videos ready for any platform.</div>
+<div class="feature-item">Text to Social Media Post: Create perfectly crafted content for every platform.</div>
+<div class="feature-item">Text to Blog Posts: Transform concepts into detailed, structured articles.</div>
+</div>
+</div>
+<div class="content-block" id="block3">
+<div class="animated-text">Meet ELITH: Your Always-On Community Manager</div>
+<p class="content-paragraph">Imagine never missing a question or comment. Your always-on community manager engages with your audience 24/7.</p>
+<div class="feature-list">
+<div class="feature-item">Authentic Conversations: Manage community engagement naturally and effectively.</div>
+<div class="feature-item">Always On: Keep your platforms active 24/7.</div>
+<div class="feature-item">On-Brand Responses: Deliver consistent, professional replies.</div>
+</div>
+</div>
+<div class="content-block" id="block4">
+<div class="animated-text">Your Vision. Your Success.</div>
+<p class="content-paragraph">From your first idea to the final result, DATAI helps you create campaigns that truly work. Forget the guesswork—welcome to marketing made accessible.</p>
+<a href="#contact" class="action-button">Join the Revolution</a>
+</div>
+</div>
+</div>
+<div class="scroll-bar">
+<div class="scroll-progress"></div>
+<div class="checkpoint" style="top: 0%" data-index="0"></div>
+<div class="checkpoint" style="top: 25%" data-index="1"></div>
+<div class="checkpoint" style="top: 50%" data-index="2"></div>
+<div class="checkpoint" style="top: 75%" data-index="3"></div>
+<div class="checkpoint" style="top: 100%" data-index="4"></div>
+</div>
+<div class="scroll-instructions">Use mouse wheel to navigate the scene!</div>
+
+
+<section id="mission" class="section">
+
+<div class="section-content">
+<div class="mission-section">
+<div class="mission-header">
+<h2>Our Mission</h2>
+<p>We exist to democratize marketing. DATAI makes powerful, scalable tools accessible to everyone, breaking down barriers to growth and success.</p>
+</div>
+<div class="section-cta">
+    <a href="#contact" class="cta-button">
+      Start Your Journey
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
+        <line x1="5" y1="12" x2="19" y2="12"/>
+        <polyline points="12 5 19 12 12 19"/>
+      </svg>
+    </a>
+  </div>
+</section>
+<section id="features" class="section">
+    <h2 class="section-header">Product</h2>
+    <div class="section-content">     
+      <div class="features-container">         
+        <section id="features">
+            <div class="container">
+              <div class="product-slider-container">
+                <button class="slider-button prev-slide">←</button>
+                <div class="product-slider">
+                  <div src="image.webp" class="product-slide"></div>
+                  <div class="product-slide"></div>
+                  <div class="product-slide"></div>
+                  <div class="product-slide"></div>
+                  <div class="product-slide"></div>
+                </div>
+                <button class="slider-button next-slide">→</button>
+              </div>
+            </div>
+          </section>      
+      </div>
+    </div>
+  </section>
+  
+<section id="about" class="section">
+<h2 class="section-header">Prototype</h2>
+<div class="section-content">
+    <div class="prototype-section">
+        <div class="prototype-container">
+          <div class="prototype-header">
+            <h2>Experience DATAI in Action</h2>
+            <p>Explore our interactive prototype to see how DATAI transforms marketing workflows.</p>
+          </div>
+          
+          <div class="prototype-frame">
+            <iframe 
+              src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Fproto%2FDk9PwaXEE99Qx8IOqBkh5B%2FDatAI_514863%3Fnode-id%3D26544-72884%26t%3DYC4Ueg1HXngnZ6jx-1%26starting-point-node-id%3D26445%253A127023"
+              allowfullscreen
+            ></iframe>
+          </div>
+      
+        
+        </div>
+        <style>
+          .prototype-section {
+            padding: 0rem 0;
+            background: #ffffff;
+          }
+      
+          .prototype-container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0 0rem;
+          }
+      
+          .prototype-header {
+            text-align: center;
+            margin-bottom: 1rem;
+          }
+      
+          .prototype-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+          }
+      
+          .prototype-header p {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto;
+          }
+      
+          .prototype-frame {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            margin: 2rem 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+          }
+      
+          .prototype-frame iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+          }
+      
+          .prototype-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+          }
+      
+          .feature-card {
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: transform 0.3s ease;
+          }
+      
+          .feature-card:hover {
+            transform: translateY(-5px);
+          }
+      
+          .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #1a1a1a;
+          }
+      
+          .feature-card p {
+            color: #666;
+            line-height: 1.6;
+          }
+      
+          @media (max-width: 768px) {
+            .prototype-frame {
+              height: 400px;
+            }
+      
+            .prototype-header h2 {
+              font-size: 2rem;
+            }
+      
+            .prototype-container {
+              padding: 0 1rem;
+            }
+          }
+        </style>
+      </div>
+    </div>
+  
+    </section>
+<section id="contact" class="section">
+<h2 class="section-header">Contact</h2>
+<div class="section-content">
+    <div style="background-color: #1a1d24; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 2rem; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="display: flex; width: 100%; max-width: 1200px; gap: 4rem; align-items: center;">
+          <!-- Left Content -->
+          <div style="flex: 1; color: white;">
+            <h1 style="font-size: 4rem; font-weight: bold; margin-bottom: 1.5rem;">Join the 2%</h1>
+            <p style="font-size: 1.5rem; line-height: 1.5; opacity: 0.9;">
+              When 2 percent of users donate,<br>
+              more developers will be supported<br>
+              to work on UI and tools. Free and<br>
+              Open Source for everyone, forever.
+            </p>
+          </div>
+      
+          <!-- Right Card -->
+          <div style="background: white; width: 100%; max-width: 450px; border-radius: 1rem; padding: 1.5rem; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+            <!-- Tab Buttons -->
+            <div style="display: flex; gap: 0.5rem; background: #f0f0f0; padding: 0.25rem; border-radius: 0.5rem; margin-bottom: 1.5rem;">
+              <button style="flex: 1; padding: 0.75rem; border: none; border-radius: 0.25rem; font-size: 1rem; background: transparent; color: #3498db;">Monthly</button>
+              <button style="flex: 1; padding: 0.75rem; border: none; border-radius: 0.25rem; font-size: 1rem; background: #3498db; color: white;">One-time</button>
+            </div>
+      
+            <!-- Amount Buttons Grid -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.75rem; margin-bottom: 1.5rem;">
+              <button style="padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 0.5rem; background: transparent; color: #666;">€ 25</button>
+              <button style="padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 0.5rem; background: transparent; color: #666;">€ 50</button>
+              <button style="padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 0.5rem; background: #3498db; color: white;">€ 100</button>
+              <button style="padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 0.5rem; background: transparent; color: #666;">€ 150</button>
+              <button style="padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 0.5rem; background: transparent; color: #666;">€ 250</button>
+              <button style="padding: 0.75rem; border: 1px solid #e0e0e0; border-radius: 0.5rem; background: transparent; color: #666;">€ 500</button>
+            </div>
+      
+            <h2 style="font-size: 1.5rem; color: #333; margin-bottom: 1.5rem;">Donate, just <strong>once</strong></h2>
+      
+            <!-- Custom Amount Input -->
+            <div style="display: flex; gap: 0.75rem; margin-bottom: 1.5rem;">
+              <div style="flex: 1; position: relative; display: flex; align-items: center;">
+                <span style="position: absolute; left: 1rem; color: #3498db;">€</span>
+                <input type="text" value="100" style="width: 100%; padding: 0.75rem; padding-left: 2rem; border: 1px solid #e0e0e0; border-radius: 0.5rem; font-size: 1rem; text-align: center;">
+              </div>
+              <button style="flex: 2; padding: 0.75rem 1.5rem; border: none; border-radius: 0.5rem; background: #3498db; color: white; font-size: 1rem;">
+                Donate ♥
+              </button>
+            </div>
+          </select>
+            </div>
+          </div>
+        </div>
+      </div></div>
+</section>
+</div>
+  
+    <style>
+      .section-cta {
+        display: flex;
+        justify-content: center;
+        padding: 0rem 0;
+        margin-top: 2rem;
+      }
+  
+      .cta-button {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 1rem 2rem;
+        background-color: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 123, 255, 0.1);
+      }
+  
+      .cta-button:hover {
+        background-color: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2);
+      }
+  
+      .cta-button .arrow-icon {
+        transition: transform 0.3s ease;
+      }
+  
+      .cta-button:hover .arrow-icon {
+        transform: translateX(4px);
+      }
+  
+      @media (max-width: 768px) {
+        .section-cta {
+          padding: 2rem 1rem;
+        }
+  
+        .cta-button {
+          padding: 0.875rem 1.5rem;
+          font-size: 0.9rem;
+        }
+      }
+    </style>
+  </div>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Initialize variables
+      const text1 = document.getElementById('text1');
+      const splineViewer = document.querySelector('spline-viewer');
+      const scrollBar = document.querySelector('.scroll-bar');
+      const scrollProgress = document.querySelector('.scroll-progress');
+      const checkpoints = document.querySelectorAll('.checkpoint');
+      const contentBlocks = document.querySelectorAll('.content-block');
+      const sections = document.querySelectorAll('.section');
+
+      let currentStep = 0;
+      const totalSteps = 3000;
+      const scrollSensitivity = 0.15;
+      let isSplineSceneComplete = false;
+
+      // Update visibility based on scroll progress
+      function updateVisibility(progress) {
+        // Scene content visibility
+        if (progress <= 0.2) {
+          text1.classList.add('text-visible');
+          contentBlocks.forEach(block => block.classList.remove('content-visible'));
+        } else {
+          text1.classList.remove('text-visible');
+          contentBlocks.forEach((block, index) => {
+            const blockStart = 0.2 + (index * 0.2);
+            const blockEnd = blockStart + 0.2;
+            if (progress > blockStart && progress <= blockEnd) {
+              block.style.opacity = 1;
+              block.style.transform = 'translateX(0)';
+            } else {
+              block.style.opacity = 0;
+              block.style.transform = index < 2 ? 'translateX(30px)' : 'translateX(-30px)';
+            }
+          });
+        }
+
+        // Update scroll progress and checkpoints
+        scrollProgress.style.height = `${progress * 100}%`;
+        checkpoints.forEach((checkpoint, index) => {
+          const checkpointProgress = index / (checkpoints.length - 1);
+          checkpoint.classList.toggle('active', progress >= checkpointProgress);
+        });
+
+        // Handle scene completion
+        if (progress >= 1) {
+          isSplineSceneComplete = true;
+          scrollBar.style.opacity = '0';
+          setTimeout(() => {
+            scrollBar.style.display = 'none';
+            enableNormalScrolling();
+          }, 300);
+        }
+      }
+
+      // Handle scroll events
+      function handleScroll(deltaY) {
+        if (!isSplineSceneComplete) {
+          currentStep = Math.max(0, Math.min(currentStep + (deltaY * scrollSensitivity), totalSteps));
+          const progress = currentStep / totalSteps;
+          if (splineViewer.isLoaded) {
+            splineViewer.setTime(currentStep);
+          }
+          updateVisibility(progress);
+        }
+      }
+
+      // Enable normal page scrolling
+      function enableNormalScrolling() {
+        document.body.style.overflowY = 'auto';
+        sections.forEach(section => {
+          section.style.opacity = '1';
+          section.style.pointerEvents = 'auto';
+        });
+      }
+
+      // Event listeners
+      window.addEventListener('wheel', (e) => {
+        if (!isSplineSceneComplete) {
+          e.preventDefault();
+          handleScroll(e.deltaY);
+        }
+      }, { passive: false });
+
+      // Touch event handling
+      let touchStartY = 0;
+      window.addEventListener('touchstart', (e) => {
+        if (!isSplineSceneComplete) {
+          touchStartY = e.touches[0].clientY;
+        }
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!isSplineSceneComplete) {
+          const touchY = e.touches[0].clientY;
+          const deltaY = touchStartY - touchY;
+          handleScroll(deltaY * 2);
+          touchStartY = touchY;
+        }
+      }, { passive: true });
+
+      // Navigation handling
+      document.querySelectorAll('.nav-item').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+          e.preventDefault();
+          const targetId = this.getAttribute('href');
+          const targetSection = document.querySelector(targetId);
+          
+          if (isSplineSceneComplete) {
+            targetSection.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            currentStep = totalSteps;
+            updateVisibility(1);
+            setTimeout(() => {
+              targetSection.scrollIntoView({ behavior: 'smooth' });
+            }, 300);
+          }
+        });
+      });
+
+      // Initialize scene
+      updateVisibility(0);
+
+      // Product slider functionality
+      const slider = document.querySelector('.product-slider');
+      const prevButton = document.querySelector('.prev-slide');
+      const nextButton = document.querySelector('.next-slide');
+
+      if (slider && prevButton && nextButton) {
+        prevButton.addEventListener('click', () => {
+          slider.scrollBy({ left: -340, behavior: 'smooth' });
+        });
+
+        nextButton.addEventListener('click', () => {
+          slider.scrollBy({ left: 340, behavior: 'smooth' });
+        });
+      }
+    });
+  </script>
+</body>
+</html>
